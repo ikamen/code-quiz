@@ -12,16 +12,16 @@ if (highScoresStorage == null) {
 }
 
 function loadHighScores() {
-    var hs1 = document.createElement('li');
-    var hs2 = document.createElement('li');
+    var hsArr = JSON.parse(localStorage.getItem('quizz_high_scores'));
 
-    hs1.innerText = "Vrabcho the greatest";
-    hs2.innerText = "Vrabcho the bestest";
+    for (var i = 1; i < hsArr.length; i++) {
+      var li = document.createElement('li');
+      li.innerText = hsArr[i];
+      resultsList.appendChild(li);
+    }
+}
 
-    resultsList.appendChild(hs1);
-    resultsList.appendChild(hs2);
-  }
-
-  function clearBoard() {
-    console.log('clear')
-  }
+function clearBoard() {
+  localStorage.setItem('quizz_high_scores', JSON.stringify(['high scores']));
+  location.href = 'highscores.html';
+}
