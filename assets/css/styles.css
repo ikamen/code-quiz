@@ -66,6 +66,10 @@ li:nth-child(odd) {
   text-align: center;
 }
 
+.quizz {
+  text-align: left;
+}
+
 .scores {
   position: absolute;
   top: 10px;
