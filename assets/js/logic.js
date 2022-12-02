@@ -48,7 +48,11 @@ startBtn.addEventListener('click', showQuestions);
 
 //Check if high scores object already exist in local storage, if not then create it
 var highScoresStorage = localStorage.getItem('quizz_high_scores');
-console.log(highScoresStorage);
+if (highScoresStorage == null) {
+    //create storage
+    localStorage.setItem('quizz_high_scores', JSON.stringify(['high scores']));
+}
+
 
 function showQuestions() {
     // hide start section
@@ -148,6 +152,9 @@ function countdown() {
   function showHighScores () {
     
     if (initialsTxt.value.length > 0){
+        var hsArr = JSON.parse(localStorage.getItem('quizz_high_scores'));
+        hsArr.push(`${initialsTxt.value}: ${correctAnswers} correct and ${wrongAnswers} wrong answers`);
+        localStorage.setItem('quizz_high_scores', JSON.stringify(hsArr));
         location.href = 'highscores.html';
     } else {
         alert('You need to provide your initials!');
