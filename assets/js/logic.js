@@ -50,7 +50,7 @@ startBtn.addEventListener('click', showQuestions);
 var highScoresStorage = localStorage.getItem('quizz_high_scores');
 if (highScoresStorage == null) {
     //create storage
-    localStorage.setItem('quizz_high_scores', JSON.stringify(['high scores']));
+    localStorage.setItem('quizz_high_scores', JSON.stringify([{hs:'start'}]));
 }
 
 
@@ -130,7 +130,7 @@ function countdown() {
       timeLeft--;
       if (timeLeft < 0) {
         
-        timer.innerText = "";
+        //timer.innerText = "";
         clearInterval(timeInterval);
         txt.innerText = 'Time is up';
         endSection.children[0].innerText = 'Time is up';
@@ -145,15 +145,23 @@ function countdown() {
     
     //Show the End Screen section and print results
     endSection.className = 'quizz';
-    finalScore.innerText = `${correctAnswers} correct and ${wrongAnswers} wrong answers`;
+    finalScore.innerText = timer.innerText;
+    //`${correctAnswers} correct and ${wrongAnswers} wrong answers`;
     
   }
 
   function showHighScores () {
     
-    if (initialsTxt.value.length > 0){
+    if (initialsTxt.value.length > 0 && initialsTxt.value.length <= 3){
         var hsArr = JSON.parse(localStorage.getItem('quizz_high_scores'));
-        hsArr.push(`${initialsTxt.value}: ${correctAnswers} correct and ${wrongAnswers} wrong answers`);
+        var obj = {initials: initialsTxt.value, result : timer.innerText}
+        hsArr.push(obj);
+
+        // Sort the results in descending order
+        hsArr.sort((s1, s2) => {
+            return s2.result - s1.result;
+        });
+
         localStorage.setItem('quizz_high_scores', JSON.stringify(hsArr));
         location.href = 'highscores.html';
     } else {
