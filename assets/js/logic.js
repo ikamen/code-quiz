@@ -3,9 +3,6 @@ const audioWrong = new Audio("assets/sfx/incorrect.wav");
 var questionToShow = 0;
 var timeLeft = 0;
 var timeInterval = null;
-var correctAnswers = 0;
-var wrongAnswers = 0;
-
 
 // Get references to the elements on the page
 var startBtn = document.querySelector('#start');
@@ -25,7 +22,7 @@ var btn1 = document.createElement('button');
 var btn2 = document.createElement('button');
 var btn3 = document.createElement('button');
 var btn4 = document.createElement('button');
-var txt = document.createElement('p');
+var txtResult = document.createElement('p');
 
 btn1.setAttribute ("id", "btn1");
 btn2.setAttribute ("id", "btn2");
@@ -36,7 +33,7 @@ questionChoices.appendChild(btn1);
 questionChoices.appendChild(btn2);
 questionChoices.appendChild(btn3);
 questionChoices.appendChild(btn4);
-questionChoices.appendChild(txt);
+questionChoices.appendChild(txtResult);
 
 //Add event listeners for all buttons
 btn1.addEventListener('click', processAnswer);
@@ -53,7 +50,6 @@ if (highScoresStorage == null) {
     localStorage.setItem('quizz_high_scores', JSON.stringify([{hs:'start'}]));
 }
 
-
 function showQuestions() {
     // hide start section
     startSection.className = 'hide';
@@ -69,8 +65,9 @@ function showQuestions() {
 }
 
 function showQuestion () {
-    txt.innerText = '';
     var question = questions [questionToShow];
+    txtResult.innerText = '';
+    //Populate question
     questionTitle.innerText = question.question;
     btn1.innerText = "1. " + question.answer1;
     btn2.innerText = "2. " + question.answer2;
@@ -81,7 +78,9 @@ function showQuestion () {
 function processAnswer() {
     var source = event.target.id
     var answerPressed = 0;
-    
+    var question = questions [questionToShow];
+
+    //Check which button is pressed
     switch(source) {
         case "btn1":
             answerPressed = 1;
@@ -96,20 +95,18 @@ function processAnswer() {
             answerPressed = 4;
             break;
     }
-
-    var question = questions [questionToShow];
    
+    //Check if the pressed button matches the correct answer
     if (answerPressed == question.correct) {
-        txt.innerText = 'Correct';
+        txtResult.innerText = 'Correct';
         audioCorrect.play();
-        correctAnswers++;
     } else {
-        txt.innerText = 'Wrong';
+        txtResult.innerText = 'Wrong';
         //Reduce available time for wrong answers
         timeLeft = timeLeft - 10;
         audioWrong.play();
-        wrongAnswers++;
     }
+    //Delay next question or if timer has finished show the end section
     setTimeout(() => {  
         questionToShow++;
         if (questionToShow <= questions.length-1) {
@@ -132,7 +129,7 @@ function countdown() {
         
         //timer.innerText = "";
         clearInterval(timeInterval);
-        txt.innerText = 'Time is up';
+        txtResult.innerText = 'Time is up';
         endSection.children[0].innerText = 'Time is up';
         showEnd();
       }
@@ -145,9 +142,7 @@ function countdown() {
     
     //Show the End Screen section and print results
     endSection.className = 'quizz';
-    finalScore.innerText = timer.innerText;
-    //`${correctAnswers} correct and ${wrongAnswers} wrong answers`;
-    
+    finalScore.innerText = timer.innerText;    
   }
 
   function showHighScores () {
